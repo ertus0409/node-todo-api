@@ -59,6 +59,8 @@ app.delete('/todos/:id', (req, res) => {
         return res.status(404).send('No todo matching with the id')
       }
       return res.status(200).send(todo);
+    }).catch((e) => {
+      res.status(400).send();
     });
   } else {
     return res.status(404).send('Please use a valid id');
