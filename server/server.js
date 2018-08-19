@@ -8,6 +8,7 @@ const {ObjectID} = require('mongodb');
 var {mongoose} = require('./db/mongoose.js');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
+var {authenticate} = require('./middleware/authenticate');
 
 
 var app = express();
@@ -76,6 +77,8 @@ app.delete('/todos/:id', (req, res) => {
   }
 });
 
+
+//PATCH /todos/:id
 app.patch('/todos/:id', (req, res) => {
   var id = req.params.id;
   var body = _.pick(req.body, ['text', 'completed']);
@@ -113,6 +116,12 @@ app.post('/users', (req, res) => {
   }).then((token) => {
     res.header('x-auth', token).send(user);
   }).catch((e) => res.status(400).send('error'));
+});
+
+
+
+app.get('/users/me', authenticate, (req, res) => {
+  res.send(req.user)
 });
 
 
