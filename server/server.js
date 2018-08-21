@@ -137,35 +137,17 @@ app.post('/users/login', (req, res) => {
   }).catch((e) => {
     res.status(401).send()
   });
-
-
-
-
-
-
-  // var email = req.body.email;
-  // var password = req.body.password;
-  // User.findOne({email}).then((user) => {
-  //   if (!user) {
-  //     return res.status(404).send();
-  //   }
-  //   //comparing raw and hashed passwords form mongodb
-  //   bcrypt.compare(password, user.password, (error, response) => {
-  //     if (error) {
-  //       return res.status(400).send(err);
-  //     }
-  //     if (response === true) {
-  //       user.generateAuthToken().then((token) => {
-  //         res.header('x-auth', token).send('Succesfully loggen in');
-  //       });
-  //     } else {
-  //       res.status(401).send();
-  //     }
-  //   });
-  // });
-
 });
 
+
+// DELTE /user/me/token
+app.delete('/users/me/token', authenticate, (req, res) => {
+  req.user.removeToken(req.token).then(() => {
+    res.status(200).send('Successfully logged out');
+  }, () => {
+    res.status(400).send();
+  });
+});
 
 
 
