@@ -1,14 +1,14 @@
 const {SHA256} = require('crypto-js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
- 
 
-// var rawPass = '356145ad';
-// const saltRounds = 10;
-// const somePass = 'RateApp123';
-// var myHash;
-//
-// bcrypt.genSalt(saltRounds, (err, salt) => {
+
+var rawPass = '356145ad';
+const saltRounds = 10;
+const somePass = 'RateApp123';
+var myHash;
+
+// bcrypt.genSalt(10, (err, salt) => {
 //   if (err) {
 //     return console.log('Cant salt');
 //   }
@@ -19,13 +19,25 @@ const bcrypt = require('bcryptjs');
 //     console.log(hash);
 //   });
 // });
+bcrypt.genSalt(10, (err, salt) => {
+  if (err) {
+    return console.log('Cant salt');
+  }
+  bcrypt.hash(rawPass, salt, (err, hash) => {
+    if (err) {
+      return console.log('Cant hash');
+    }
+    myHash = hash;
+    console.log(myHash.toString());
+  });
+});
 //
-// // bcrypt.compare(rawPass, myHash, (err, res) => {
-// //   if (err) {
-// //     return console.log('Error', err);
-// //   }
-// //   console.log(res);
-// // });
+bcrypt.compare(rawPass, myHash, (err, res) => {
+  if (err) {
+    return console.log('Error', err);
+  }
+  console.log(res);
+});
 //
 // bcrypt.hash(rawPass, saltRounds, (err, hash) => {
 //   if (err) {

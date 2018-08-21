@@ -3,6 +3,7 @@ require('./config/config.js');
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcryptjs');
 
 const {ObjectID} = require('mongodb');
 var {mongoose} = require('./db/mongoose.js');
@@ -119,12 +120,51 @@ app.post('/users', (req, res) => {
 });
 
 
-
 //POST /users/me
 app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user)
 });
 
+
+// POST /users/login {email, password}
+app.post('/users/login', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+
+  User.findByCredentials(body.email, body.password).then((user) => {
+    user.generateAuthToken().then((token) => {
+      res.header('x-auth', token).send(user);
+    });
+  }).catch((e) => {
+    res.status(400).send()
+  });
+
+
+
+
+
+
+  // var email = req.body.email;
+  // var password = req.body.password;
+  // User.findOne({email}).then((user) => {
+  //   if (!user) {
+  //     return res.status(404).send();
+  //   }
+  //   //comparing raw and hashed passwords form mongodb
+  //   bcrypt.compare(password, user.password, (error, response) => {
+  //     if (error) {
+  //       return res.status(400).send(err);
+  //     }
+  //     if (response === true) {
+  //       user.generateAuthToken().then((token) => {
+  //         res.header('x-auth', token).send('Succesfully loggen in');
+  //       });
+  //     } else {
+  //       res.status(401).send();
+  //     }
+  //   });
+  // });
+
+});
 
 
 
